@@ -1,118 +1,111 @@
-import Axios from 'axios'
-import React, { Component } from 'react'
-import axios from 'axios'
-import { render } from 'react-dom'
-
+import Axios from "axios";
+import React, { Component } from "react";
+import axios from "axios";
+import { render } from "react-dom";
+import "./app.css";
 class App extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       globalData: {},
-      country: '',
+      country: "",
       countries: [],
       countryData: {},
-      filter: '',
-    }
+      filter: "",
+    };
   }
   componentDidMount() {
     axios
-      .get('https://disease.sh/v3/covid-19/all')
+      .get("https://disease.sh/v3/covid-19/all")
       .then((res) => {
         this.setState({
           globalData: res.data,
-        })
+        });
       })
       .catch((err) => {
-        console.log(err)
-      })
+        console.log(err);
+      });
 
     axios
-      .get('https://disease.sh/v3/covid-19/countries')
+      .get("https://disease.sh/v3/covid-19/countries")
       .then((res) => {
         this.setState({
           countries: res.data,
-        })
+        });
       })
       .catch((err) => {
-        console.log(err)
-      })
+        console.log(err);
+      });
   }
   handleInput = (e) => {
-    console.log(this.state.country)
+    console.log(this.state.country);
     // let {}
-    this.setState({ [e.target.name]: e.target.value })
-    if (e.target.value === 'all') {
+    this.setState({ [e.target.name]: e.target.value });
+    if (e.target.value === "all") {
       axios
         .get(`https://disease.sh/v3/covid-19/all`)
         .then((res) => {
-          this.setState({ countryData: res.data })
+          this.setState({ countryData: res.data });
         })
         .catch((err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     } else {
       axios
         .get(`https://disease.sh/v3/covid-19/countries/${e.target.value}`)
         .then((res) => {
-          this.setState({ countryData: res.data })
+          this.setState({ countryData: res.data });
         })
         .catch((err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     }
-  }
+  };
 
   render() {
-    let { globalData, countries, country, countryData } = this.state
+    let { globalData, countries, country, countryData } = this.state;
+    let renderData;
 
-    console.log(countryData)
-    let renderData
-
-    if (country === '' || country === 'all') {
-      renderData = globalData
+    if (country === "" || country === "all") {
+      renderData = globalData;
     } else {
-      renderData = countryData
+      renderData = countryData;
     }
-
-    // let renderCountryData = countryData.map(country=>
-    //   {return ()}
-    //   )
-
     return (
-      <div className='row'>
-        <div className='col-lg-6 col-12'>
-          <div className='row'>
-            <div className='col-12 col-md-6'>
+      <div className="row">
+        <div className="col-lg-6 col-12">
+          <div className="row">
+            <div className="col-12 col-md-6">
               <h2>Covid Tracker</h2>
             </div>
-            <div className='col-12 col-md-6 pt-2'>
-              <div className='form-group'>
+            <div className="col-12 col-md-6 pt-2">
+              <div className="form-group">
                 <select
-                  className='form-control'
-                  name='country'
-                  id=''
+                  className="form-control"
+                  name="country"
+                  id=""
                   onChange={this.handleInput}
                   value={this.state.country}
                 >
-                  <option value='all'>Global</option>
+                  <option value="all">Global</option>
                   {countries.map((country, index) => {
-                    let { countryInfo } = country
+                    let { countryInfo } = country;
                     return (
                       <option key={index} value={countryInfo._id}>
                         {country.country}
                       </option>
-                    )
+                    );
                   })}
                 </select>
               </div>
             </div>
           </div>
-          <div className='row'>
-            <div className='col-lg-4 col-md-4 col-12' onClick>
-              <div className='card'>
-                <div className='row'>
-                  <div className='col-12'>
+          <div className="row">
+            <div className="col-lg-4 col-md-4 col-12">
+              <div className="card">
+                <div className="row">
+                  <div className="col-12">
                     <h3>Active Cases</h3>
                     <p>+ {renderData.todayCases} today</p>
                     <p>{renderData.cases} Total</p>
@@ -120,10 +113,10 @@ class App extends Component {
                 </div>
               </div>
             </div>
-            <div className='col-6 col-lg-4 col-md-4'>
-              <div className='card'>
-                <div className='row'>
-                  <div className='col-12'>
+            <div className="col-6 col-lg-4 col-md-4 mt-1">
+              <div className="card">
+                <div className="row">
+                  <div className="col-12">
                     <h3>Recovered</h3>
                     <p>+ {renderData.todayRecovered} today</p>
                     <p>{renderData.recovered} Total</p>
@@ -131,10 +124,10 @@ class App extends Component {
                 </div>
               </div>
             </div>
-            <div className='col-6 col-lg-4 col-md-4'>
-              <div className='card'>
-                <div className='row'>
-                  <div className='col-12'>
+            <div className="col-6 col-lg-4 col-md-4 mt-1">
+              <div className="card">
+                <div className="row">
+                  <div className="col-12">
                     <h3>Deaths</h3>
                     <p>+ {renderData.todayDeaths} today</p>
                     <p>{renderData.deaths} Total</p>
@@ -144,15 +137,36 @@ class App extends Component {
             </div>
           </div>
         </div>
-        <div className='col-lg-6'>
-          <div className='card'>
-            <div className='row'>
-              <div className='col-12'></div>
+        <div className="col-lg-6 mt-1">
+          <div className="card">
+            <h2>Live Cases by country</h2>
+            <div className="card-body">
+              <div className="row">
+                {countries.map((country, index) => {
+                  let { countryInfo } = country;
+                  return (
+                    <div key={index} className="col-12 pt-1 data_row">
+                      <div className="row">
+                        <div className="col-6">
+                          <img
+                            className="rounded"
+                            style={{ height: 50, width: 50 }}
+                            src={countryInfo.flag}
+                          />
+                          <span>{country.country}</span>
+                        </div>
+                        <div className="col-6 pt-1">{country.cases}</div>
+                      </div>
+                      <hr />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
-export default App
+export default App;
